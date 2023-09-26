@@ -1,0 +1,37 @@
+version: '3'
+services:
+  express:
+    build:
+      context: ./server
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/polls
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+
+  react:
+    build:
+      context: ./client
+    ports:
+      - '80:80'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
